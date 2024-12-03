@@ -81,20 +81,26 @@ class AdaptadorTitulares extends ArrayAdapter<Titular> {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         View item = convertView;
+        ViewHolder contenedor;
 
-        if(item == null)
-        {
+        if(item == null){
             LayoutInflater inflater = LayoutInflater.from(getContext());
             item = inflater.inflate(R.layout.layout, null);
+            contenedor = new ViewHolder();
+            contenedor.title =(TextView)item.findViewById(R.id.tvTitulo);
+            contenedor.subtitle = (TextView)item.findViewById(R.id.tvSubTitulo);
+            item.setTag(contenedor);
+        }else{
+            contenedor = (ViewHolder)item.getTag();
         }
 
-        TextView lblTitulo = (TextView)item.findViewById(R.id.tvTitulo);
-        lblTitulo.setText(datos[position].getTitle());
-
-        TextView lblSubtitulo = (TextView)item.findViewById(R.id.tvSubTitulo);
-        lblSubtitulo.setText(datos[position].getSubtitle());
+        contenedor.title.setText(datos[position].getTitle());
+        contenedor.subtitle.setText(datos[position].getSubtitle());
 
         return(item);
     }
 
+    class ViewHolder{
+        TextView title, subtitle;
+    }
 }
