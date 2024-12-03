@@ -2,9 +2,11 @@ package com.merlita.listviewclase;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -19,9 +21,11 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import org.w3c.dom.Text;
+
 
 public class MainActivity extends AppCompatActivity {
-
+    TextView tv;
     ListView lv;
     AdaptadorTitulares adaptadorTitulares;
     private final Titular[] datos =
@@ -41,22 +45,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         lv = findViewById(R.id.listView);
+        tv = findViewById(R.id.textView);
         adaptadorTitulares = new AdaptadorTitulares(this, datos);
 
-/*
-        final String[] datos =
-                new String[]{"Elem1","Elem2","Elem3","Elem4","Elem5","Elem2","Elem3","Elem4",
-                        "Elem5","Elem2","Elem3","Elem4","Elem5","Elem2","Elem3","Elem4","Elem5",
-                        "Elem2","Elem3","Elem4","Elem5","Elem2","Elem3","Elem4","Elem5"};
 
-        ArrayAdapter<String> adaptador =
-                new ArrayAdapter<String>(this,
-                        android.R.layout.simple_list_item_1, datos);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //Alternativa 1:
+                /*String opcionSeleccionada =
+                        ((Titular)adapterView.getItemAtPosition(i)).getTitle();
+                tv.setText(opcionSeleccionada);*/
+
+                //Alternativa 2:
+                String opcionSeleccionada =
+                      ((TextView)view.findViewById(R.id.tvTitulo))
+                          .getText().toString();
+                tv.setText(opcionSeleccionada);
+
+            }
+        });
 
 
-*/
         lv.setAdapter(adaptadorTitulares);
-        //lv.addView(new Button());
 
     }
 }
@@ -69,8 +80,13 @@ class AdaptadorTitulares extends ArrayAdapter<Titular> {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View item = inflater.inflate(R.layout.layout, null);
+        View item = convertView;
+
+        if(item == null)
+        {
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            item = inflater.inflate(R.layout.layout, null);
+        }
 
         TextView lblTitulo = (TextView)item.findViewById(R.id.tvTitulo);
         lblTitulo.setText(datos[position].getTitle());
